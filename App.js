@@ -5,6 +5,7 @@ import {NavigationContainer} from '@react-navigation/native';
 
 import Login from './screens/Login';
 import Cadastro from './screens/Cadastro';
+import Home from './screens/Home';
 
 
 export default function App(){
@@ -17,6 +18,7 @@ export default function App(){
         <Navegacao.Navigator headerMode='none'>
           <Navegacao.Screen name='login' component={Login}/>
           <Navegacao.Screen name='cadastro' component={Cadastro}/>
+          <Navegacao.Screen name='home' component={Home}/>
         </Navegacao.Navigator>
     </NavigationContainer>
   )
