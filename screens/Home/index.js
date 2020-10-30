@@ -21,7 +21,7 @@ const Home = ({props,route}) => {
 
     let quantidade = qtd.toString();
 
-    const [cupoms,setCupoms] = useState([
+    const [cupons,setCupons] = useState([
 
 
         {
@@ -63,7 +63,7 @@ const Home = ({props,route}) => {
 
         return porcento;
     }  
-    const usaDesconto = (id,nome) => {
+    const usaCupom = (id,nome) => {
 
         //Quando o Usuario clicar, dar um jeito de gravar no banco que esse cupom ja foi utilizado --> atualiza desconto php
 
@@ -79,8 +79,8 @@ const Home = ({props,route}) => {
                     onPress: () => {
                         
                         Clipboard.setString(nome),
-                        setCupoms((cupomsAntigos)=>{
-                            return cupomsAntigos.filter(cupoms => cupoms.id !=id);
+                        setCupons((cuponsAntigos)=>{
+                            return cuponsAntigos.filter(cupons => cupons.id !=id);
                         })
                     }
                 },
@@ -94,7 +94,7 @@ const Home = ({props,route}) => {
 
         return (
             <View style={estilo.viewListaVazia}>
-                <Text style={estilo.txtListaVazia}>Você ainda não possui cupoms...</Text>
+                <Text style={estilo.txtListaVazia}>Você ainda não possui cupons...</Text>
             </View>
         )
     }
@@ -216,11 +216,11 @@ const Home = ({props,route}) => {
                             <FlatList
                             horizontal
                             showsHorizontalScrollIndicator={false}
-                            data={cupoms}
+                            data={cupons}
                             keyExtractor={(item, index) => item.id}
                             ListEmptyComponent={listaVazia()} 
                             renderItem={itemData =>
-                            <TouchableOpacity onPress={()=>{usaDesconto((itemData.item.id),(itemData.item.nome))}}> 
+                            <TouchableOpacity onPress={()=>{usaCupom((itemData.item.id),(itemData.item.nome))}}> 
                                 <View style={estilo.promo}> 
                                     <Text style={estilo.txtPromoLoja}>
                                         {itemData.item.loja}
