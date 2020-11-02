@@ -18,7 +18,7 @@ const Login = (props) => {
     }
     const FazerLogin = async () => {
 
-        await fetch('http://192.168.0.9/banco/login.php',{
+        await fetch('http://192.168.0.9/banco/auth/login.php',{
             
             method: 'POST',
             headers: {

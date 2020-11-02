@@ -14,27 +14,78 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
 import estilo from './estilo';
 
 const Perfil = (props) => {
 
+    useEffect(() => {
+
+        fetch ('http://192.168.0.9/banco/auth/consulta/user.php',{
+            method: 'POST',
+            headers: {
+                'Accept' : ' application/json',
+                'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify({
+                id: props.id
+            })
+        }).then(response => response.json())
+        .then((responseJSON) => {
+            
+            if(responseJSON != ""){
+
+                console.log(responseJSON);
+
+                setTelefone(responseJSON.telefone)
+                setSenha(responseJSON.password)
+                setUsuario(responseJSON.nome)
+                setEmail(responseJSON.email)
+            
+                setEstado(responseJSON.estado)
+                setCidade(responseJSON.cidade)
+                setCep(responseJSON.cep)
+                setRua(responseJSON.rua)
+                
+            }
+        
+        })
+        .catch((error)=>{
+
+            console.log(error);
+        })
+        
+    },[]);
+
+    //habilitar edição dos campos
     const [editarCampo, setEditarCampo] = useState(false);
     const [cadeado, setCadeado] = useState("lock");
 
-    //Dados do Usuario
+    //Dados atuais
+    const [telefone, setTelefone] = useState('');
+    const [usuario, setUsuario] = useState('');
+    const [email, setEmail] = useState('');
+    const [senha, setSenha] = useState('');
+
+    const [cidade,setCidade] = useState('');
+    const [estado,setEstado]=useState('')
+    const [cep,setCep] = useState('');
+    const [rua,setRua] = useState('');
+    
+    //Dados novos do Usuario
+    const [telefoneNovo, setTelefoneNovo] = useState("");
     const [emailNovo, setEmailNovo] = useState("");
     const [senhaNova, setSenhaNova] = useState("");
-    const [telefoneNovo, setTelefoneNovo] = useState("");
-    const [cep, setCep] = useState("")
-    const [rua, setRua] = useState("")
-    const [cidade, setCidade] = useState("")
-    const [estado, setEstado] = useState("")
-    
 
+    //Dados novos do Usuario - endereço
+    const [cidadeNova, setCidadeNova] = useState("")
+    const [estadoNovo, setEstadoNovo] = useState("")
+    const [cepNovo, setCepNovo] = useState("")
+    const [ruaNova, setRuaNova] = useState("")
+    
+    
     const atualizar=()=>{
 
-        fetch('http://192.168.0.9/banco/update.php',{
+        fetch('http://192.168.0.9/banco/auth/update.php',{
             method: 'POST',
             headers:{
                 'Accept' : 'application/json',
@@ -44,13 +95,13 @@ const Perfil = (props) => {
 
                 id:props.id,
                 email:emailNovo,
-                senhaAntiga: props.senha,
+                senhaAntiga: senha,
                 senhaNova: senhaNova,
                 telefone: telefoneNovo,
-                cep: cep,
-                rua: rua,
-                cidade: cidade,
-                estado:estado
+                cep: cepNovo,
+                rua: ruaNova,
+                cidade: cidadeNova,
+                estado:estadoNovo
                 
 
             }) 
@@ -72,7 +123,6 @@ const Perfil = (props) => {
                 console.error(error);
             })
     }
-
     const habilitarEdicao =()=>{
 
             if(!editarCampo){
@@ -115,7 +165,7 @@ const Perfil = (props) => {
                                             <View style={estilo.boxCampo}>
                                                 <Text style={estilo.campos}>Usuário: </Text>
                                                     <View style={estilo.boxCampoEstatico}>
-                                                        <Text style={estilo.txtResults,{color:'rgba(0,0,0,0.7)'}}>{props.usuario}</Text>
+                                                        <Text style={estilo.txtResults,{color:'rgba(0,0,0,0.7)'}}>{usuario}</Text>
                                                     </View>
                                             </View>
                                             <View style={estilo.boxCampo}>
@@ -124,7 +174,7 @@ const Perfil = (props) => {
                                                         <TextInput
                                                             style={estilo.txtResults}
                                                             placeholderTextColor={'rgba(0,0,0,0.2)'}
-                                                            placeholder={props.email}
+                                                            placeholder={email}
                                                             onChangeText={(insertEmail)=> setEmailNovo(insertEmail)} 
                                                             editable={editarCampo}  
                                                         /> 
@@ -136,7 +186,7 @@ const Perfil = (props) => {
                                                         <TextInput
                                                             style={estilo.txtResults}
                                                             placeholderTextColor={'rgba(0,0,0,0.2)'}
-                                                            placeholder={props.senha}
+                                                            placeholder={senha}
                                                             onChangeText={(insertSenha)=> setSenhaNova(insertSenha)} 
                                                             editable={editarCampo}  
                                                         /> 
@@ -148,7 +198,7 @@ const Perfil = (props) => {
                                                         <TextInput
                                                             style={estilo.txtResults}
                                                             placeholderTextColor={'rgba(0,0,0,0.2)'}
-                                                            placeholder={props.telefone}
+                                                            placeholder={telefone}
                                                             onChangeText={(insertTelefone)=> setTelefoneNovo(insertTelefone)} 
                                                             editable={editarCampo}  
                                                         /> 
@@ -166,8 +216,8 @@ const Perfil = (props) => {
                                                         <TextInput
                                                             style={estilo.txtResults}
                                                             placeholderTextColor={'rgba(0,0,0,0.2)'}
-                                                            placeholder={'Cep'}
-                                                            onChangeText={(insertCep)=> setCep(insertCep)} 
+                                                            placeholder={cep}
+                                                            onChangeText={(insertCep)=> setCepNovo(insertCep)} 
                                                             editable={editarCampo}  
                                                         /> 
                                                     </View>
@@ -178,8 +228,8 @@ const Perfil = (props) => {
                                                         <TextInput
                                                             style={estilo.txtResults}
                                                             placeholderTextColor={'rgba(0,0,0,0.2)'}
-                                                            placeholder={'Rua'}
-                                                            onChangeText={(insertRua)=> setRua(insertRua)} 
+                                                            placeholder={rua}
+                                                            onChangeText={(insertRua)=> setRuaNova(insertRua)} 
                                                             editable={editarCampo}  
                                                         /> 
                                                     </View>
@@ -190,8 +240,8 @@ const Perfil = (props) => {
                                                         <TextInput
                                                             style={estilo.txtResults}
                                                             placeholderTextColor={'rgba(0,0,0,0.2)'}
-                                                            placeholder={'Cidade'}
-                                                            onChangeText={(insertCidade)=> setCidade(insertCidade)} 
+                                                            placeholder={cidade}
+                                                            onChangeText={(insertCidade)=> setCidadeNova(insertCidade)} 
                                                             editable={editarCampo}  
                                                         /> 
                                                     </View>
@@ -202,8 +252,8 @@ const Perfil = (props) => {
                                                         <TextInput
                                                             style={estilo.txtResults}
                                                             placeholderTextColor={'rgba(0,0,0,0.2)'}
-                                                            placeholder={'Estado'}
-                                                            onChangeText={(insertEstado)=> setEstado(insertEstado)} 
+                                                            placeholder={estado}
+                                                            onChangeText={(insertEstado)=> setEstadoNovo(insertEstado)} 
                                                             editable={editarCampo}  
                                                         /> 
                                                     </View>

@@ -17,7 +17,7 @@ const Cadastro = (props) => {
     }
     const fazerCadastro = async () => {
 
-        await fetch('http://192.168.0.9/banco/cadastro.php',{
+        await fetch('http://192.168.0.9/banco/auth/cadastro.php',{
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
